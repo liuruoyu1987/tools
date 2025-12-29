@@ -377,15 +377,20 @@
               <div class="converter-section">
                 <h3>时间戳 → 日期时间</h3>
                 <div class="input-group">
-                  <label>Unix 时间戳（秒）</label>
-                  <input v-model="timestampInput" type="number" placeholder="例如: 1735689600" @input="convertTimestampToDate">
+                  <label>Unix 时间戳（自动识别秒/毫秒）</label>
+                  <input v-model="timestampInput" type="number" placeholder="例如: 1735689600 或 1735689600000" @input="convertTimestampToDate">
+                </div>
+                <div class="input-group" v-if="timestampType">
+                  <label>检测到的时间戳类型</label>
+                  <div class="result-display" style="color: #667eea;">{{ timestampType }}</div>
                 </div>
                 <div class="input-group">
                   <label>转换结果</label>
                   <div class="result-display">{{ dateResult || '等待输入...' }}</div>
                 </div>
                 <div class="quick-actions">
-                  <button @click="setCurrentTimestamp" class="btn btn-secondary">使用当前时间戳</button>
+                  <button @click="setCurrentTimestamp" class="btn btn-secondary">使用当前时间戳（秒）</button>
+                  <button @click="setCurrentTimestampMs" class="btn btn-secondary">使用当前时间戳（毫秒）</button>
                 </div>
               </div>
               <div class="converter-section">
@@ -431,19 +436,31 @@
         const currentTimestamp = ref('')
         const currentDateTime = ref('')
         const currentUTC = ref('')
+        const timestampType = ref('')
         let intervalId = null
 
         const convertTimestampToDate = () => {
           if (!timestampInput.value) {
             dateResult.value = ''
+            timestampType.value = ''
             return
           }
           try {
             const timestamp = parseInt(timestampInput.value)
-            const date = new Date(timestamp * 1000)
+            let date
+            
+            if (timestamp < 10000000000) {
+              date = new Date(timestamp * 1000)
+              timestampType.value = '秒 (seconds)'
+            } else {
+              date = new Date(timestamp)
+              timestampType.value = '毫秒 (milliseconds)'
+            }
+            
             dateResult.value = formatDate(date)
           } catch (e) {
             dateResult.value = '无效的时间戳'
+            timestampType.value = ''
           }
         }
 
@@ -463,6 +480,12 @@
         const setCurrentTimestamp = () => {
           const now = new Date()
           timestampInput.value = Math.floor(now.getTime() / 1000).toString()
+          convertTimestampToDate()
+        }
+
+        const setCurrentTimestampMs = () => {
+          const now = new Date()
+          timestampInput.value = now.getTime().toString()
           convertTimestampToDate()
         }
 
@@ -514,9 +537,11 @@
           currentTimestamp,
           currentDateTime,
           currentUTC,
+          timestampType,
           convertTimestampToDate,
           convertDateToTimestamp,
           setCurrentTimestamp,
+          setCurrentTimestampMs,
           setCurrentDateTime
         }
       }
