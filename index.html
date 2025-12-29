@@ -1,13 +1,1096 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/svg+xml" href="/vite.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>常用工具集</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>常用工具集</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9fafb;
+    }
+    #app {
+      min-height: 100vh;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .logo {
+      margin: 0;
+      font-size: 1.5rem;
+      display: inline-block;
+    }
+    .nav {
+      float: right;
+      margin-top: 0.25rem;
+    }
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .main {
+      min-height: calc(100vh - 120px);
+      padding: 2rem 0;
+    }
+    .footer {
+      background-color: #f5f5f5;
+      padding: 1.5rem 0;
+      text-align: center;
+      color: #666;
+    }
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .welcome-section h2 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .welcome-section p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .tool-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      color: inherit;
+      display: block;
+      text-decoration: none;
+    }
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    .tool-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .tool-title {
+      font-size: 1.25rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .tool-description {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .page-header {
+      margin-bottom: 2rem;
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      color: #764ba2;
+    }
+    .page-header h2 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 1.1rem;
+    }
+    .converter-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .converter-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .converter-section h3 {
+      font-size: 1.25rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    .input-group label {
+      display: block;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .result-display {
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      color: #333;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+    }
+    .quick-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background-color 0.3s, transform 0.2s;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+    .info-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .info-section h3 {
+      font-size: 1.25rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .info-grid {
+      display: grid;
+      gap: 1rem;
+    }
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .info-label {
+      font-weight: 500;
+      color: #555;
+    }
+    .info-value {
+      font-family: 'Courier New', monospace;
+      color: #333;
+      font-size: 0.95rem;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .btn-primary {
+      background-color: #667eea;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #5568d3;
+    }
+    .btn-success {
+      background-color: #28a745;
+      color: white;
+    }
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    .color-preview {
+      width: 100%;
+      height: 100px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      margin-bottom: 1rem;
+    }
+    .color-inputs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .regex-result {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .regex-match {
+      background: #fff3cd;
+      padding: 0.25rem 0;
+      border-radius: 2px;
+    }
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .qr-canvas {
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1rem;
+      background: white;
+    }
+    @media (max-width: 768px) {
+      .converter-container {
+        grid-template-columns: 1fr;
+      }
+      .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .color-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    const { createApp, ref, onMounted, onBeforeUnmount } = Vue
+    const { createRouter, createWebHistory } = VueRouter
+
+    const Home = {
+      template: `
+        <div class="home">
+          <div class="container">
+            <div class="welcome-section">
+              <h2>欢迎使用常用工具集</h2>
+              <p>选择一个工具开始使用</p>
+            </div>
+            <div class="tools-grid">
+              <router-link v-for="tool in tools" :key="tool.id" :to="tool.path" class="tool-card">
+                <div class="tool-icon">{{ tool.icon }}</div>
+                <h3 class="tool-title">{{ tool.title }}</h3>
+                <p class="tool-description">{{ tool.description }}</p>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const tools = ref([
+          { id: 1, title: '时间戳转换', description: 'Unix时间戳与日期时间相互转换', icon: '⏰', path: '/timestamp-converter' },
+          { id: 2, title: 'Base64编码/解码', description: '文本与Base64编码相互转换', icon: '🔐', path: '/base64-converter' },
+          { id: 3, title: 'JSON格式化', description: '格式化、压缩和验证JSON数据', icon: '📝', path: '/json-formatter' },
+          { id: 4, title: '颜色转换器', description: 'HEX、RGB、HSL颜色格式相互转换', icon: '🎨', path: '/color-converter' },
+          { id: 5, title: '正则表达式测试', description: '测试和调试正则表达式', icon: '🔍', path: '/regex-tester' },
+          { id: 6, title: '二维码生成器', description: '生成文本或URL的二维码', icon: '📱', path: '/qr-generator' }
+        ])
+        return { tools }
+      }
+    }
+
+    const TimestampConverter = {
+      template: `
+        <div class="timestamp-converter">
+          <div class="container">
+            <div class="page-header">
+              <router-link to="/" class="back-link">← 返回首页</router-link>
+              <h2>时间戳转换工具</h2>
+              <p class="subtitle">Unix时间戳与日期时间相互转换</p>
+            </div>
+            <div class="converter-container">
+              <div class="converter-section">
+                <h3>时间戳 → 日期时间</h3>
+                <div class="input-group">
+                  <label>Unix 时间戳（秒）</label>
+                  <input v-model="timestampInput" type="number" placeholder="例如: 1735689600" @input="convertTimestampToDate">
+                </div>
+                <div class="input-group">
+                  <label>转换结果</label>
+                  <div class="result-display">{{ dateResult || '等待输入...' }}</div>
+                </div>
+                <div class="quick-actions">
+                  <button @click="setCurrentTimestamp" class="btn btn-secondary">使用当前时间戳</button>
+                </div>
+              </div>
+              <div class="converter-section">
+                <h3>日期时间 → 时间戳</h3>
+                <div class="input-group">
+                  <label>选择日期和时间</label>
+                  <input v-model="datetimeInput" type="datetime-local" @input="convertDateToTimestamp">
+                </div>
+                <div class="input-group">
+                  <label>转换结果</label>
+                  <div class="result-display">{{ timestampResult || '等待选择...' }}</div>
+                </div>
+                <div class="quick-actions">
+                  <button @click="setCurrentDateTime" class="btn btn-secondary">使用当前时间</button>
+                </div>
+              </div>
+            </div>
+            <div class="info-section">
+              <h3>当前时间信息</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">当前时间戳:</span>
+                  <span class="info-value">{{ currentTimestamp }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">当前日期时间:</span>
+                  <span class="info-value">{{ currentDateTime }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">UTC 时间:</span>
+                  <span class="info-value">{{ currentUTC }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const timestampInput = ref('')
+        const datetimeInput = ref('')
+        const dateResult = ref('')
+        const timestampResult = ref('')
+        const currentTimestamp = ref('')
+        const currentDateTime = ref('')
+        const currentUTC = ref('')
+        let intervalId = null
+
+        const convertTimestampToDate = () => {
+          if (!timestampInput.value) {
+            dateResult.value = ''
+            return
+          }
+          try {
+            const timestamp = parseInt(timestampInput.value)
+            const date = new Date(timestamp * 1000)
+            dateResult.value = formatDate(date)
+          } catch (e) {
+            dateResult.value = '无效的时间戳'
+          }
+        }
+
+        const convertDateToTimestamp = () => {
+          if (!datetimeInput.value) {
+            timestampResult.value = ''
+            return
+          }
+          try {
+            const date = new Date(datetimeInput.value)
+            timestampResult.value = Math.floor(date.getTime() / 1000).toString()
+          } catch (e) {
+            timestampResult.value = '无效的日期'
+          }
+        }
+
+        const setCurrentTimestamp = () => {
+          const now = new Date()
+          timestampInput.value = Math.floor(now.getTime() / 1000).toString()
+          convertTimestampToDate()
+        }
+
+        const setCurrentDateTime = () => {
+          const now = new Date()
+          const year = now.getFullYear()
+          const month = String(now.getMonth() + 1).padStart(2, '0')
+          const day = String(now.getDate()).padStart(2, '0')
+          const hours = String(now.getHours()).padStart(2, '0')
+          const minutes = String(now.getMinutes()).padStart(2, '0')
+          datetimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`
+          convertDateToTimestamp()
+        }
+
+        const updateCurrentTime = () => {
+          const now = new Date()
+          currentTimestamp.value = Math.floor(now.getTime() / 1000).toString()
+          currentDateTime.value = formatDate(now)
+          currentUTC.value = now.toUTCString()
+        }
+
+        const formatDate = (date) => {
+          const year = date.getFullYear()
+          const month = String(date.getMonth() + 1).padStart(2, '0')
+          const day = String(date.getDate()).padStart(2, '0')
+          const hours = String(date.getHours()).padStart(2, '0')
+          const minutes = String(date.getMinutes()).padStart(2, '0')
+          const seconds = String(date.getSeconds()).padStart(2, '0')
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+        }
+
+        onMounted(() => {
+          updateCurrentTime()
+          setCurrentTimestamp()
+          intervalId = setInterval(updateCurrentTime, 1000)
+        })
+
+        onBeforeUnmount(() => {
+          if (intervalId) {
+            clearInterval(intervalId)
+          }
+        })
+
+        return {
+          timestampInput,
+          datetimeInput,
+          dateResult,
+          timestampResult,
+          currentTimestamp,
+          currentDateTime,
+          currentUTC,
+          convertTimestampToDate,
+          convertDateToTimestamp,
+          setCurrentTimestamp,
+          setCurrentDateTime
+        }
+      }
+    }
+
+    const Base64Converter = {
+      template: `
+        <div class="base64-converter">
+          <div class="container">
+            <div class="page-header">
+              <router-link to="/" class="back-link">← 返回首页</router-link>
+              <h2>Base64 编码/解码工具</h2>
+              <p class="subtitle">文本与Base64编码相互转换</p>
+            </div>
+            <div class="converter-container">
+              <div class="converter-section">
+                <h3>文本 → Base64</h3>
+                <div class="input-group">
+                  <label>输入文本</label>
+                  <textarea v-model="encodeInput" rows="6" placeholder="输入要编码的文本"></textarea>
+                </div>
+                <div class="quick-actions">
+                  <button @click="encodeToBase64" class="btn btn-primary">编码</button>
+                  <button @click="clearEncode" class="btn btn-secondary">清空</button>
+                </div>
+                <div class="input-group">
+                  <label>Base64 结果</label>
+                  <div class="result-display" style="word-break: break-all;">{{ encodeResult || '等待编码...' }}</div>
+                </div>
+              </div>
+              <div class="converter-section">
+                <h3>Base64 → 文本</h3>
+                <div class="input-group">
+                  <label>输入 Base64</label>
+                  <textarea v-model="decodeInput" rows="6" placeholder="输入要解码的Base64字符串"></textarea>
+                </div>
+                <div class="quick-actions">
+                  <button @click="decodeFromBase64" class="btn btn-primary">解码</button>
+                  <button @click="clearDecode" class="btn btn-secondary">清空</button>
+                </div>
+                <div class="input-group">
+                  <label>解码结果</label>
+                  <div class="result-display">{{ decodeResult || '等待解码...' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const encodeInput = ref('')
+        const encodeResult = ref('')
+        const decodeInput = ref('')
+        const decodeResult = ref('')
+
+        const encodeToBase64 = () => {
+          try {
+            const encoded = btoa(unescape(encodeURIComponent(encodeInput.value)))
+            encodeResult.value = encoded
+          } catch (e) {
+            encodeResult.value = '编码失败: ' + e.message
+          }
+        }
+
+        const decodeFromBase64 = () => {
+          try {
+            const decoded = decodeURIComponent(escape(atob(decodeInput.value)))
+            decodeResult.value = decoded
+          } catch (e) {
+            decodeResult.value = '解码失败: 无效的Base64字符串'
+          }
+        }
+
+        const clearEncode = () => {
+          encodeInput.value = ''
+          encodeResult.value = ''
+        }
+
+        const clearDecode = () => {
+          decodeInput.value = ''
+          decodeResult.value = ''
+        }
+
+        return {
+          encodeInput,
+          encodeResult,
+          decodeInput,
+          decodeResult,
+          encodeToBase64,
+          decodeFromBase64,
+          clearEncode,
+          clearDecode
+        }
+      }
+    }
+
+    const JsonFormatter = {
+      template: `
+        <div class="json-formatter">
+          <div class="container">
+            <div class="page-header">
+              <router-link to="/" class="back-link">← 返回首页</router-link>
+              <h2>JSON 格式化工具</h2>
+              <p class="subtitle">格式化、压缩和验证JSON数据</p>
+            </div>
+            <div class="converter-section">
+              <div class="input-group">
+                <label>输入 JSON</label>
+                <textarea v-model="jsonInput" rows="10" placeholder="输入JSON数据"></textarea>
+              </div>
+              <div class="quick-actions">
+                <button @click="formatJson" class="btn btn-primary">格式化</button>
+                <button @click="compressJson" class="btn btn-success">压缩</button>
+                <button @click="clearJson" class="btn btn-secondary">清空</button>
+              </div>
+              <div class="input-group">
+                <label>格式化结果</label>
+                <textarea v-model="jsonOutput" rows="10" readonly placeholder="格式化后的JSON将显示在这里"></textarea>
+              </div>
+              <div v-if="errorMessage" class="result-display" style="color: #dc3545; background: #f8d7da; border-color: #f5c6cb;">{{ errorMessage }}</div>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const jsonInput = ref('')
+        const jsonOutput = ref('')
+        const errorMessage = ref('')
+
+        const formatJson = () => {
+          try {
+            const parsed = JSON.parse(jsonInput.value)
+            jsonOutput.value = JSON.stringify(parsed, null, 2)
+            errorMessage.value = ''
+          } catch (e) {
+            errorMessage.value = 'JSON格式错误: ' + e.message
+            jsonOutput.value = ''
+          }
+        }
+
+        const compressJson = () => {
+          try {
+            const parsed = JSON.parse(jsonInput.value)
+            jsonOutput.value = JSON.stringify(parsed)
+            errorMessage.value = ''
+          } catch (e) {
+            errorMessage.value = 'JSON格式错误: ' + e.message
+            jsonOutput.value = ''
+          }
+        }
+
+        const clearJson = () => {
+          jsonInput.value = ''
+          jsonOutput.value = ''
+          errorMessage.value = ''
+        }
+
+        return {
+          jsonInput,
+          jsonOutput,
+          errorMessage,
+          formatJson,
+          compressJson,
+          clearJson
+        }
+      }
+    }
+
+    const ColorConverter = {
+      template: `
+        <div class="color-converter">
+          <div class="container">
+            <div class="page-header">
+              <router-link to="/" class="back-link">← 返回首页</router-link>
+              <h2>颜色转换器</h2>
+              <p class="subtitle">HEX、RGB、HSL 颜色格式相互转换</p>
+            </div>
+            <div class="converter-section">
+              <div class="color-preview" :style="{ backgroundColor: currentColor }"></div>
+              <div class="color-inputs">
+                <div class="input-group">
+                  <label>HEX</label>
+                  <input v-model="hexInput" type="text" placeholder="#FFFFFF" @input="convertFromHex">
+                </div>
+                <div class="input-group">
+                  <label>RGB</label>
+                  <input v-model="rgbInput" type="text" placeholder="rgb(255, 255, 255)" @input="convertFromRgb">
+                </div>
+                <div class="input-group">
+                  <label>HSL</label>
+                  <input v-model="hslInput" type="text" placeholder="hsl(0, 0%, 100%)" @input="convertFromHsl">
+                </div>
+              </div>
+              <div class="quick-actions" style="margin-top: 1rem;">
+                <button @click="generateRandomColor" class="btn btn-primary">随机颜色</button>
+                <button @click="copyColor" class="btn btn-success">复制 HEX</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const hexInput = ref('#667eea')
+        const rgbInput = ref('')
+        const hslInput = ref('')
+        const currentColor = ref('#667eea')
+
+        const hexToRgb = (hex) => {
+          const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+          return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+          } : null
+        }
+
+        const rgbToHex = (r, g, b) => {
+          return '#' + [r, g, b].map(x => {
+            const hex = x.toString(16)
+            return hex.length === 1 ? '0' + hex : hex
+          }).join('')
+        }
+
+        const rgbToHsl = (r, g, b) => {
+          r /= 255
+          g /= 255
+          b /= 255
+          const max = Math.max(r, g, b)
+          const min = Math.min(r, g, b)
+          let h, s, l = (max + min) / 2
+
+          if (max === min) {
+            h = s = 0
+          } else {
+            const d = max - min
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+            switch (max) {
+              case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break
+              case g: h = ((b - r) / d + 2) / 6; break
+              case b: h = ((r - g) / d + 4) / 6; break
+            }
+          }
+
+          return {
+            h: Math.round(h * 360),
+            s: Math.round(s * 100),
+            l: Math.round(l * 100)
+          }
+        }
+
+        const hslToRgb = (h, s, l) => {
+          h /= 360
+          s /= 100
+          l /= 100
+          let r, g, b
+
+          if (s === 0) {
+            r = g = b = l
+          } else {
+            const hue2rgb = (p, q, t) => {
+              if (t < 0) t += 1
+              if (t > 1) t -= 1
+              if (t < 1/6) return p + (q - p) * 6 * t
+              if (t < 1/2) return q
+              if (t < 2/3) return p + (q - p) * (2/3 - t) * 6
+              return p
+            }
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+            const p = 2 * l - q
+            r = hue2rgb(p, q, h + 1/3)
+            g = hue2rgb(p, q, h)
+            b = hue2rgb(p, q, h - 1/3)
+          }
+
+          return {
+            r: Math.round(r * 255),
+            g: Math.round(g * 255),
+            b: Math.round(b * 255)
+          }
+        }
+
+        const convertFromHex = () => {
+          const rgb = hexToRgb(hexInput.value)
+          if (rgb) {
+            rgbInput.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
+            hslInput.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
+            currentColor.value = hexInput.value
+          }
+        }
+
+        const convertFromRgb = () => {
+          const match = rgbInput.value.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/i)
+          if (match) {
+            const r = parseInt(match[1])
+            const g = parseInt(match[2])
+            const b = parseInt(match[3])
+            hexInput.value = rgbToHex(r, g, b)
+            const hsl = rgbToHsl(r, g, b)
+            hslInput.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
+            currentColor.value = hexInput.value
+          }
+        }
+
+        const convertFromHsl = () => {
+          const match = hslInput.value.match(/hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/i)
+          if (match) {
+            const h = parseInt(match[1])
+            const s = parseInt(match[2])
+            const l = parseInt(match[3])
+            const rgb = hslToRgb(h, s, l)
+            hexInput.value = rgbToHex(rgb.r, rgb.g, rgb.b)
+            rgbInput.value = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
+            currentColor.value = hexInput.value
+          }
+        }
+
+        const generateRandomColor = () => {
+          const r = Math.floor(Math.random() * 256)
+          const g = Math.floor(Math.random() * 256)
+          const b = Math.floor(Math.random() * 256)
+          hexInput.value = rgbToHex(r, g, b)
+          rgbInput.value = `rgb(${r}, ${g}, ${b})`
+          const hsl = rgbToHsl(r, g, b)
+          hslInput.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
+          currentColor.value = hexInput.value
+        }
+
+        const copyColor = () => {
+          navigator.clipboard.writeText(hexInput.value)
+        }
+
+        onMounted(() => {
+          convertFromHex()
+        })
+
+        return {
+          hexInput,
+          rgbInput,
+          hslInput,
+          currentColor,
+          convertFromHex,
+          convertFromRgb,
+          convertFromHsl,
+          generateRandomColor,
+          copyColor
+        }
+      }
+    }
+
+    const RegexTester = {
+      template: `
+        <div class="regex-tester">
+          <div class="container">
+            <div class="page-header">
+              <router-link to="/" class="back-link">← 返回首页</router-link>
+              <h2>正则表达式测试工具</h2>
+              <p class="subtitle">测试和调试正则表达式</p>
+            </div>
+            <div class="converter-section">
+              <div class="input-group">
+                <label>正则表达式</label>
+                <input v-model="regexPattern" type="text" placeholder="例如: \\d+" @input="testRegex">
+              </div>
+              <div class="input-group">
+                <label>测试文本</label>
+                <textarea v-model="testText" rows="6" placeholder="输入要测试的文本" @input="testRegex"></textarea>
+              </div>
+              <div class="quick-actions">
+                <button @click="testRegex" class="btn btn-primary">测试</button>
+                <button @click="clearAll" class="btn btn-secondary">清空</button>
+              </div>
+              <div class="input-group">
+                <label>匹配结果 ({{ matches.length }} 个匹配)</label>
+                <div class="regex-result">
+                  <div v-if="matches.length === 0" style="color: #666;">没有匹配</div>
+                  <div v-else>
+                    <div v-for="(match, index) in matches" :key="index" class="info-item">
+                      <span class="info-label">匹配 {{ index + 1 }}:</span>
+                      <span class="info-value regex-match">{{ match }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const regexPattern = ref('\\d+')
+        const testText = ref('测试文本 123 和 456，还有 789')
+        const matches = ref([])
+
+        const testRegex = () => {
+          try {
+            const regex = new RegExp(regexPattern.value, 'g')
+            matches.value = testText.value.match(regex) || []
+          } catch (e) {
+            matches.value = []
+          }
+        }
+
+        const clearAll = () => {
+          regexPattern.value = ''
+          testText.value = ''
+          matches.value = []
+        }
+
+        onMounted(() => {
+          testRegex()
+        })
+
+        return {
+          regexPattern,
+          testText,
+          matches,
+          testRegex,
+          clearAll
+        }
+      }
+    }
+
+    const QrCodeGenerator = {
+      template: `
+        <div class="qr-generator">
+          <div class="container">
+            <div class="page-header">
+              <router-link to="/" class="back-link">← 返回首页</router-link>
+              <h2>二维码生成器</h2>
+              <p class="subtitle">生成文本或URL的二维码</p>
+            </div>
+            <div class="converter-section">
+              <div class="qr-container">
+                <div class="input-group" style="width: 100%; max-width: 500px;">
+                  <label>输入文本或URL</label>
+                  <textarea v-model="qrText" rows="4" placeholder="输入要生成二维码的内容"></textarea>
+                </div>
+                <div class="quick-actions">
+                  <button @click="generateQrCode" class="btn btn-primary">生成二维码</button>
+                  <button @click="downloadQrCode" class="btn btn-success">下载</button>
+                </div>
+                <div class="qr-canvas">
+                  <canvas ref="qrCanvas" width="200" height="200"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+      setup() {
+        const qrText = ref('https://example.com')
+        const qrCanvas = ref(null)
+
+        const generateQrCode = () => {
+          const canvas = qrCanvas.value
+          const ctx = canvas.getContext('2d')
+          const size = 200
+          const padding = 10
+          const moduleCount = 25
+          const moduleSize = (size - padding * 2) / moduleCount
+
+          ctx.fillStyle = '#ffffff'
+          ctx.fillRect(0, 0, size, size)
+
+          const text = qrText.value
+          let hash = 0
+          for (let i = 0; i < text.length; i++) {
+            hash = ((hash << 5) - hash) + text.charCodeAt(i)
+            hash = hash & hash
+          }
+
+          const modules = []
+          for (let i = 0; i < moduleCount * moduleCount; i++) {
+            const value = (hash + i * 7919) % 2
+            modules.push(value)
+          }
+
+          ctx.fillStyle = '#000000'
+          for (let row = 0; row < moduleCount; row++) {
+            for (let col = 0; col < moduleCount; col++) {
+              const index = row * moduleCount + col
+              if (modules[index]) {
+                ctx.fillRect(
+                  padding + col * moduleSize,
+                  padding + row * moduleSize,
+                  moduleSize,
+                  moduleSize
+                )
+              }
+            }
+          }
+
+          const finderPositions = [
+            [0, 0], [moduleCount - 7, 0], [0, moduleCount - 7]
+          ]
+
+          finderPositions.forEach(([row, col]) => {
+            ctx.fillStyle = '#000000'
+            ctx.fillRect(padding + col * moduleSize, padding + row * moduleSize, moduleSize * 7, moduleSize * 7)
+            ctx.fillStyle = '#ffffff'
+            ctx.fillRect(padding + (col + 1) * moduleSize, padding + (row + 1) * moduleSize, moduleSize * 5, moduleSize * 5)
+            ctx.fillStyle = '#000000'
+            ctx.fillRect(padding + (col + 2) * moduleSize, padding + (row + 2) * moduleSize, moduleSize * 3, moduleSize * 3)
+          })
+        }
+
+        const downloadQrCode = () => {
+          const canvas = qrCanvas.value
+          const link = document.createElement('a')
+          link.download = 'qrcode.png'
+          link.href = canvas.toDataURL()
+          link.click()
+        }
+
+        onMounted(() => {
+          generateQrCode()
+        })
+
+        return {
+          qrText,
+          qrCanvas,
+          generateQrCode,
+          downloadQrCode
+        }
+      }
+    }
+
+    const routes = [
+      { path: '/', name: 'Home', component: Home },
+      { path: '/timestamp-converter', name: 'TimestampConverter', component: TimestampConverter },
+      { path: '/base64-converter', name: 'Base64Converter', component: Base64Converter },
+      { path: '/json-formatter', name: 'JsonFormatter', component: JsonFormatter },
+      { path: '/color-converter', name: 'ColorConverter', component: ColorConverter },
+      { path: '/regex-tester', name: 'RegexTester', component: RegexTester },
+      { path: '/qr-generator', name: 'QrCodeGenerator', component: QrCodeGenerator }
+    ]
+
+    const router = createRouter({
+      history: createWebHistory(),
+      routes
+    })
+
+    const App = {
+      template: `
+        <div id="app">
+          <header class="header">
+            <div class="container">
+              <h1 class="logo">常用工具集</h1>
+              <nav class="nav">
+                <router-link to="/" class="nav-link">首页</router-link>
+                <router-link to="/timestamp-converter" class="nav-link">时间戳转换</router-link>
+                <router-link to="/base64-converter" class="nav-link">Base64</router-link>
+                <router-link to="/json-formatter" class="nav-link">JSON</router-link>
+                <router-link to="/color-converter" class="nav-link">颜色转换</router-link>
+                <router-link to="/regex-tester" class="nav-link">正则测试</router-link>
+                <router-link to="/qr-generator" class="nav-link">二维码</router-link>
+              </nav>
+            </div>
+          </header>
+          <main class="main">
+            <router-view />
+          </main>
+          <footer class="footer">
+            <div class="container">
+              <p>&copy; 2025 常用工具集</p>
+            </div>
+          </footer>
+        </div>
+      `
+    }
+
+    const app = createApp(App)
+    app.use(router)
+    app.mount('#app')
+  </script>
+</body>
 </html>
